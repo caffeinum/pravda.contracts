@@ -13,6 +13,10 @@ Export `pravda` to PATH: add this to your `~/.bashrc`:
 export PATH=/opt/pravda/bin:$PATH
 ```
 
+Install JRE at (Get JDK 10)[http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html]
+
+Install Mono framework to use C# at [http://www.mono-project.com/download/]
+
 # Init wallet
 
 ```bash
