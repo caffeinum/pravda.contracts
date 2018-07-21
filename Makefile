@@ -21,13 +21,13 @@ token: expload dirs
 			--input build/win/token.exe \
 			--output build/win/token.pravda
 
-erc721: expload dirs
-	csc ERC721Basic.cs \
-			-reference:build/lib/expload.dll \
-			-out:build/win/erc721basic.exe
+pawnshop: expload dirs
+	csc pawnshop.cs \
+		-reference:build/lib/expload.dll \
+		-out:build/win/pawnshop.exe
 	pravda compile dotnet \
-			--input build/win/erc721basic.exe \
-			--output build/win/erc721basic.pravda
+		--input build/win/pawnshop.exe \
+		--output build/bin/pawnshop.pravda
 
 # DEPLOY TO NET
 
