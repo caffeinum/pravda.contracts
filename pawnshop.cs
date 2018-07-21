@@ -19,7 +19,7 @@ class Pawnshop {
     public bool initHasNotBeenLaunched = true;
 
     public int GameItemsTotal = 0;
-    public float maxPricePawnshopPercent = 70;
+    public int maxPricePawnshopPercent = 70;
 
     /* Contract admin */
     public Bytes ContractAdmin = Info.Sender();
@@ -29,7 +29,7 @@ class Pawnshop {
         if (initHasNotBeenLaunched) 
         {
             /* Mine some tokens to contract Admin for simulation purposes */
-            mintGametoken(1000000);
+            _mintGametoken(1000000);
         }
         initHasNotBeenLaunched = false;
     }
@@ -90,6 +90,11 @@ class Pawnshop {
     //////////////////////////////////////////////
     /////////////////////// Minting for simulation purposes
     public void mintGametoken(int _tokens) 
+    {
+	    _mintGametoken(_tokens);
+    }
+
+    private void _mintGametoken(int _tokens) 
     {
 	    balances.put(Info.Sender(), _tokens);
     }
