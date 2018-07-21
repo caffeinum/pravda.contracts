@@ -4,7 +4,7 @@
 mkdir ~/pravda
 cd ~/pravda
 wget https://github.com/expload/pravda/releases/download/v0.5.0/PravdaSDK-v0.5.0.tgz
-unzip PravdaSDK-v0.5.0.tgz
+tar -xvf PravdaSDK-v0.5.0.tgz
 sudo cp -rf pravda-v0.5.0 /opt/pravda
 ```
 
