@@ -16,27 +16,39 @@ class Pawnshop {
 
     //////////////////////////////////////////////
     /////////////////////// Constructor 
+    public bool initHasNotBeenLaunched = true;
+
     public int GameItemsTotal = 0;
     public float maxPricePawnshopPercent = 70;
 
     /* Contract admin */
     public Bytes ContractAdmin = Info.Sender();
 
-    /* Mine some tokens to contract Admin for simulation purposes */
-    // mintGametoken(ContractAdmin, 1000000);
+    public void initContract() 
+    {
+        if (initHasNotBeenLaunched) 
+        {
+            /* Mine some tokens to contract Admin for simulation purposes */
+            mintGametoken(1000000);
+        }
+        initHasNotBeenLaunched = false;
+    }
 
     //////////////////////////////////////////////
     /////////////////////// Pawnshop methods  
 
-    public void initiatePawnTransaction(int _tokenId) {
+    public void initiatePawnTransaction(int _tokenId) 
+    {
         // int willReturnMoney ;
     }
 
-    public void finishPawnTransaction(int _tokenId) {
+    public void finishPawnTransaction(int _tokenId) 
+    {
 
     }
 
-    public void changePawnshopPercent(int _newPercent) {
+    public void changePawnshopPercent(int _newPercent) 
+    {
         if (Info.Sender() == ContractAdmin) {
             maxPricePawnshopPercent = _newPercent;
         }
