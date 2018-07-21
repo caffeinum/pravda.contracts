@@ -32,12 +32,12 @@ pawnshop: expload dirs
 # DEPLOY TO NET
 
 deploy_all: token
-	pravda broadcast deploy -l 60000 -p 1 \
+	pravda broadcast deploy -l 28000 -p 1 \
 		-w wallet.json -e ${NODE}/broadcast \
 		-i build/bin/pawnshop.pravda
 
 dry_run: token
-	pravda broadcast deploy -l 60000 -p 1 \
+	pravda broadcast deploy \
 		-w wallet.json -e ${NODE}/broadcast \
 		-i build/bin/pawnshop.pravda --dry-run
 
