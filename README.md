@@ -19,6 +19,11 @@ export PATH=/opt/pravda/bin:$PATH
 pravda gen address -o wallet.json
 ```
 
+# Init env
+```bash
+source ./setup_env
+```
+
 # Make
 
 ```bash
