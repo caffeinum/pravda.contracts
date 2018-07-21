@@ -1,8 +1,12 @@
-all: token
+all: token erc721basic
 
 token: expload
 	csc token.cs -reference:build/expload.dll -out:build/token.exe
 	pravda compile dotnet --input build/token.exe --output build/token.pravda
+
+erc721: expload
+	csc ERC721Basic.cs -reference:build/expload.dll -out:build/erc721basic.exe
+	pravda compile dotnet --input build/erc721basic.exe --output build/erc721basic.pravda
 
 expload:
 	mkdir build
