@@ -8,15 +8,43 @@ class Pawnshop {
 
     /* Rare items from the game */
     Mapping<Bytes, int> userGameItem = new Mapping<Bytes, int>();
-    public int GameItemsTotal = 0;
 
     Mapping<int, int> gameItemPrice = new Mapping<int, int>();
     Mapping<int, String> gameItemName = new Mapping<int, String>();
     Mapping<int, Bytes> gameItemOwner = new Mapping<int, Bytes>();
     Mapping<int, Bytes> gameItemUser = new Mapping<int, Bytes>();
 
+    //////////////////////////////////////////////
+    /////////////////////// Constructor 
+    public int GameItemsTotal = 0;
+    public float maxPricePawnshopPercent = 70;
 
-    /* Getters */
+    /* Contract admin */
+    public Bytes ContractAdmin = Info.Sender();
+
+    /* Mine some tokens to contract Admin for simulation purposes */
+    // mintGametoken(ContractAdmin, 1000000);
+
+    //////////////////////////////////////////////
+    /////////////////////// Pawnshop methods  
+
+    public void initiatePawnTransaction(int _tokenId) {
+        // int willReturnMoney ;
+    }
+
+    public void finishPawnTransaction(int _tokenId) {
+
+    }
+
+    public void changePawnshopPercent(int _newPercent) {
+        if (Info.Sender() == ContractAdmin) {
+            maxPricePawnshopPercent = _newPercent;
+        }
+    }
+
+    //////////////////////////////////////////////
+    /////////////////////// Getters
+
     public int gameItemOf(Bytes _itemOwner) 
     {
         return userGameItem.getDefault(_itemOwner, 0);
@@ -26,6 +54,9 @@ class Pawnshop {
     {
         return balances.getDefault(_tokenOwner, 0);
     }
+
+    //////////////////////////////////////////////
+    /////////////////////// Transfers
 
     public void transfer(Bytes _to, int _tokens) 
     {
@@ -44,7 +75,8 @@ class Pawnshop {
         }
     }
 
-    /* Minting functions for simulation purposes */
+    //////////////////////////////////////////////
+    /////////////////////// Minting for simulation purposes
     public void mintGametoken(int _tokens) 
     {
 	    balances.put(Info.Sender(), _tokens);
