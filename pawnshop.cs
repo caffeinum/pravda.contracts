@@ -15,6 +15,13 @@ class Pawnshop {
     Mapping<int, Bytes> gameItemOwner = new Mapping<int, Bytes>();
     Mapping<int, Bytes> gameItemUser = new Mapping<int, Bytes>();
 
+
+    /* Getters */
+    public int gameItemOf(Bytes _itemOwner) 
+    {
+        return userGameItem.getDefault(_itemOwner, 0);
+    }
+
     public int balanceOf(Bytes _tokenOwner) 
     {
         return balances.getDefault(_tokenOwner, 0);
