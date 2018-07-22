@@ -6,7 +6,7 @@ const app = express()
 
 const { NODE } = require('./config')
 
-const runtx = require('./runtx')
+const { run, genWallet } = require('./runtx')
 
 const extractWallet = (req) => {
   const { address, privateKey } = req.query
@@ -33,6 +33,10 @@ app.get('/balance', safe(async ({ address }) => {
     address,
     balance,
   }
+}))
+
+app.get('/generate', safe(() => {
+  return JsonOrThrow(genWallet())
 }))
 
 app.get('/token', safe(async () => {

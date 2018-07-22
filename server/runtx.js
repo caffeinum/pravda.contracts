@@ -50,6 +50,9 @@ const run = (method = 'getBalance', wallet, payload) => {
   return reply.toString()
 }
 
-// run()
+const genWallet = () => {
+  const command = `pravda gen address`
+  return execSync(command).toString()
+}
 
-module.exports = run
+module.exports = { run, genWallet }

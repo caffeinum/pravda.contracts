@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "pm2 start app.js --name=expload-api --watch app.js",
+    "start": "pm2 start app.js --name=expload-api --watch app.js -i 4",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
