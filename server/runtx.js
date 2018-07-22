@@ -39,7 +39,7 @@ const run = (method = 'getBalance', wallet, payload) => {
 
   const command = `pravda broadcast run \
     -e ${NODE}/broadcast -w ${wallet_file} \
-    -l 10000 -i ../build/bin/${method}.pravda`
+    -l 2000 -i ../build/bin/${method}.pravda`
 
   const reply = execSync(command)
   console.log(command + ":\n")
@@ -55,7 +55,7 @@ const genWallet = () => {
   return execSync(command).toString()
 }
 
-const pay = (address, amount = 1000) => {
+const pay = (address, amount = 4000) => {
   const command = `pravda broadcast transfer \
     -e ${NODE}/broadcast -w ../wallet.json \
     -l 10000 -t ${address} -a ${amount}`
