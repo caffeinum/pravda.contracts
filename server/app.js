@@ -113,4 +113,20 @@ app.get('/token/transfer-ownership', safe(async (wallet, { tokenId, to }) => {
   return tx('transferOwnership', wallet, payload)
 }))
 
+app.get('/token/initiatePawnTransaction', safe(async (wallet, { tokenId }) => {
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
+
+  const payload = [ tokenId ]
+  return tx('initiatePawnTransaction', wallet, payload)
+}))
+
+app.get('/token/finishPawnTransaction', safe(async (wallet, { tokenId }) => {
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
+
+  const payload = [ tokenId ]
+  return tx('finishPawnTransaction', wallet, payload)
+}))
+
 app.listen(process.env.PORT || 3000, () => console.log('[APP] listening on port 3000'))
