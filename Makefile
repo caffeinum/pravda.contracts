@@ -1,8 +1,9 @@
-all: dirs token pawnshop build_methods
+all: dirs token pawnshop abi
 
 # env
 env:
 	. ./setup_env
+
 
 # LIB
 expload: dirs
