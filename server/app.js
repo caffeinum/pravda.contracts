@@ -3,60 +3,47 @@
 const express = require('express')
 const request = require('request-promise-native')
 const app = express()
+const fs = require('fs')
+
+const _adminwallet = JSON.parse(fs.readFileSync('../wallet.json').toString())
 
 const { NODE } = require('./config')
 
-const { run, genWallet } = require('./runtx')
+const { run, genWallet, pay } = require('./runtx')
 
-const extractWallet = (req) => {
-  const { address, privateKey } = req.query
-  return { address, privateKey }
-}
+const { tx, safe, cors, JsonOrThrow, filterJSON } = require('./helpers')
 
-const safe = (handler) => async (req, res) => {
-  try {
-    const wallet = extractWallet(req)
-    const reply = await handler(wallet, req.query)
-    res.json(reply)
-  } catch ({ name, message, stack, ...err }) {
-    res.status(500).json({ name, message, stack, ...err })
-  }
-}
-
-// Add headers
-app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-})
+app.use(cors)
 
 app.get('/echo', safe((wallet) => wallet))
 
 app.get('/balance', safe(async ({ address }) => {
   if (!address) throw new Error(`No wallet={address}`)
-  console.log(`${NODE}`)
-  const balance = await request(`${NODE}/balance?address=${address}`)
+
   return {
     address,
-    balance,
+    balance: await request(`${NODE}/balance?address=${address}`),
   }
 }))
 
 app.get('/generate', safe(() => {
-  return JsonOrThrow(genWallet())
+  return JsonOrThrow(filterJSON(genWallet()))
+}))
+
+app.get('/faucet', safe((wallet) => {
+  if (!wallet.address) throw new Error(`No wallet={address}`)
+
+  const reply = pay(wallet)
+  return JsonOrThrow(filterJSON(reply))
+}))
+
+app.get('/token/faucet', safe(({ address }) => {
+  if (!address) throw new Error(`No wallet={address}`)
+
+  const reply1 = run('mintGametoken', _adminwallet, [ 7000 ])
+  const reply2 = run('transfer', _adminwallet, [ 'x' + address, 7000 ])
+
+  return JsonOrThrow(filterJSON(reply2))
 }))
 
 app.get('/token', safe(async () => {
@@ -66,42 +53,39 @@ app.get('/token', safe(async () => {
   ]
 }))
 
-const filterJSON = (raw) => raw
-        .split('\n')
-        .filter( line => !/akka\.actor/.test(line) )
-        .join('')
-
-const JsonOrThrow = (json) => {
-  if (reply = JSON.parse(json))
-    return reply
-  else
-    throw new Error(`Wrong format: ${reply}`)
-}
-
-
 app.get('/token/getBalance', safe(async (wallet, { holderAddress }) => {
   if (!wallet) throw new Error(`No wallet={address,privateKey}`)
 
   const payload = holderAddress ? [ 'x'+holderAddress ] : []
-
-  let reply = runtx('getBalance', wallet, payload)
-
-  reply = filterJSON(reply)
-
-  return JsonOrThrow(reply)
+  return tx('getBalance', wallet, payload)
 }))
 
 app.get('/token/mintTokens', safe(async (wallet, { amount }) => {
   if (!wallet) throw new Error(`No wallet={address,privateKey}`)
 
   const payload = [ amount ]
+  return tx('mintGametoken', wallet, payload)
+}))
 
-  let reply = runtx('mintTokens', wallet, payload)
+app.get('/token/balanceOf', safe(async (wallet, { holderAddress }) => {
+  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
 
-  reply = filterJSON(reply)
+  const payload = holderAddress ? [ 'x'+holderAddress ] : []
+  return tx('balanceOf', wallet, payload)
+}))
 
-  return JsonOrThrow(reply)
+app.get('/token/gameItemOf', safe(async (wallet, { holderAddress }) => {
+  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
 
+  const payload = holderAddress ? [ 'x'+holderAddress ] : []
+  return tx('gameItemOf', wallet, payload)
+}))
+
+app.get('/token/transfer', safe(async (wallet, { to, amount }) => {
+  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
+
+  const payload = [ to, amount ]
+  return tx('gameItemOf', wallet, payload)
 }))
 
 app.listen(process.env.PORT || 3000, () => console.log('[APP] listening on port 3000'))
