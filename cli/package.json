@@ -1,0 +1,20 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bson": "^3.0.2",
+    "ed25519": "0.0.4",
+    "ed2curve": "^0.2.1",
+    "elliptic": "^6.4.0",
+    "superagent": "^3.8.3",
+    "tweetnacl": "^1.0.0"
+  }
+}
