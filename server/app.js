@@ -55,10 +55,12 @@ const JsonOrThrow = (json) => {
 }
 
 
-app.get('/token/getBalance', safe(async (wallet, query) => {
+app.get('/token/getBalance', safe(async (wallet, { holderAddress }) => {
   if (!wallet) throw new Error(`No wallet={address,privateKey}`)
 
-  let reply = runtx('getBalance', wallet)
+  const payload = holderAddress ? [ 'x'+holderAddress ] : []
+
+  let reply = runtx('getBalance', wallet, payload)
 
   reply = filterJSON(reply)
 
@@ -78,4 +80,4 @@ app.get('/token/mintTokens', safe(async (wallet, { amount }) => {
 
 }))
 
-app.listen(3000, () => console.log('[APP] listening on port 3000'))
+app.listen(3000 || process.env.PORT, () => console.log('[APP] listening on port 3000'))

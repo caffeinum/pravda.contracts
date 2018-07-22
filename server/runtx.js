@@ -19,7 +19,7 @@ const run = (method = 'getBalance', wallet, payload) => {
     const len = payload.length
     const asm = fs.readFileSync(`../methods/${method}.asm`).toString()
     const lines = asm.split('\n')
-    const args = payload.map(param => `push ${param}`)
+    const args = payload.reverse().map(param => `push ${param}`)
 
     const script = [
       ...args,
