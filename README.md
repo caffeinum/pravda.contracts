@@ -17,23 +17,55 @@ Install JRE at (Get JDK 10)[http://www.oracle.com/technetwork/java/javase/downlo
 
 Install Mono framework to use C# at [http://www.mono-project.com/download/]
 
-# Init wallet
+# Init
 
 ```bash
+# init wallet
 pravda gen address -o wallet.json
-```
 
 # Init env
-```bash
 source ./setup_env
-```
 
 # Make
-
-```bash
 make
-```
 
 # Deploy
-```bash
+make deploy
 ```
+
+# API
+
+```bash
+cd server
+npm i
+npm start
+```
+
+Server runs at localhost:3000. Endpoints provide access to the Pawnshop smartcontract using precompiled binaries from `../build/bin/*.pravda`. To build them, run
+
+```bash
+make abi
+```
+
+### API Endpoints
+
+Public
+  - `/node` - node info and balance of admin wallet
+  - `/generate` - retuns JSON with `{address, privateKey}`
+  - `/balance?address=$address` -
+
+Free
+  - `/faucet` - get free pravda tokens
+  - `/token/faucet` - get free "ERC20" InterGame tokens
+
+Auth
+    You pay for fee and need to provide `AUTH="address=$address&privateKey=$privateKey"` you have received in the `/generate` endpoint.
+
+  - `/token/mintGameItem?$AUTH` - mint yourself a testing SWORD
+  - `/token/mintGameToken?$AUTH` - mint yourself some "ERC20" tokens for testing
+
+  - `/token/balanceOf?$AUTH&holderAddress=$BOB` - get Bob's balance
+  - `/token/gameItemOf?$AUTH&holderAddress=$BOB` - get Bob's Game items
+
+  - `/token/initiatePawnTransaction?$AUTH&tokenId=$id` - get a loan for your in-game asset for around 70% of the asset price
+  - `/token/initiatePawnTransaction?$AUTH&tokenId=$id` - pay back your loan when you're ready

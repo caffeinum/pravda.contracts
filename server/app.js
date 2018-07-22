@@ -129,4 +129,22 @@ app.get('/token/finishPawnTransaction', safe(async (wallet, { tokenId }) => {
   return tx('finishPawnTransaction', wallet, payload)
 }))
 
+// Getters
+
+app.get('/token/getContractAdmin', safe(async () => {
+  return tx('getContractAdmin', _adminwallet)
+}))
+
+app.get('/token/getGameItemUser', safe(async ({}, { tokenId }) => {
+  return tx('getGameItemUser', _adminwallet, [ tokenId ])
+}))
+
+app.get('/token/getGameItemOwner', safe(async ({}, { tokenId }) => {
+  return tx('getGameItemOwner', _adminwallet, [ tokenId ])
+}))
+
+
+
+
+
 app.listen(process.env.PORT || 3000, () => console.log('[APP] listening on port 3000'))

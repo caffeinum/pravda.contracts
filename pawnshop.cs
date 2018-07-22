@@ -15,7 +15,7 @@ class Pawnshop {
     Mapping<int, Bytes> gameItemUser = new Mapping<int, Bytes>();
 
     //////////////////////////////////////////////
-    /////////////////////// Constructor 
+    /////////////////////// Constructor
     public bool initHasNotBeenLaunched = true;
 
     public int GameItemsTotal = 0;
@@ -24,10 +24,11 @@ class Pawnshop {
     /* Contract admin */
     public Bytes ContractAdmin = Info.Sender();
 
-    public void initContract() 
+    public void initContract()
     {
-        if (initHasNotBeenLaunched) 
+        if (initHasNotBeenLaunched)
         {
+            ContractAdmin = Info.Sender();
             /* Mine some tokens to contract Admin for simulation purposes */
             _mintGametoken(1000000);
         }
@@ -35,9 +36,9 @@ class Pawnshop {
     }
 
     //////////////////////////////////////////////
-    /////////////////////// Pawnshop methods  
+    /////////////////////// Pawnshop methods
 
-    public void initiatePawnTransaction(int _tokenId) 
+    public void initiatePawnTransaction(int _tokenId)
     {
         Bytes sender = Info.Sender();
         if (sender == gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0)))) {
@@ -51,10 +52,10 @@ class Pawnshop {
                     gameItemOwner.put(_tokenId, ContractAdmin);
                 }
             }
-        } 
+        }
     }
 
-    public void finishPawnTransaction(int _tokenId) 
+    public void finishPawnTransaction(int _tokenId)
     {
         Bytes sender = Info.Sender();
         int willReturnMoney = maxPricePawnshopPercent * gameItemPrice.getDefault(_tokenId, 0) / 100;
@@ -66,7 +67,7 @@ class Pawnshop {
         }
     }
 
-    public void changePawnshopPercent(int _newPercent) 
+    public void changePawnshopPercent(int _newPercent)
     {
         if (Info.Sender() == ContractAdmin) {
             maxPricePawnshopPercent = _newPercent;
@@ -76,20 +77,32 @@ class Pawnshop {
     //////////////////////////////////////////////
     /////////////////////// Getters
 
-    public int gameItemOf(Bytes _itemOwner) 
+    public int gameItemOf(Bytes _itemOwner)
     {
         return userGameItem.getDefault(_itemOwner, 0);
     }
 
-    public int balanceOf(Bytes _tokenOwner) 
+    public int balanceOf(Bytes _tokenOwner)
     {
         return balances.getDefault(_tokenOwner, 0);
+    }
+
+    public Bytes getContractAdmin() {
+        return ContractAdmin;
+    }
+
+    public Bytes getGameItemOwner(int _tokenId) {
+        return gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0)));
+    }
+
+    public Bytes getGameItemUser(int _tokenId) {
+        return gameItemUser.getDefault(_tokenId, new Bytes(Convert.ToByte(0)));
     }
 
     //////////////////////////////////////////////
     /////////////////////// Transfers
 
-    public void transfer(Bytes _to, int _tokens) 
+    public void transfer(Bytes _to, int _tokens)
     {
         if (_tokens > 0) {
             if (balances.getDefault(Info.Sender(), 0) >= _tokens) {
@@ -99,7 +112,7 @@ class Pawnshop {
         }
     }
 
-    public void transferOwnership(int _tokenId, Bytes _to) 
+    public void transferOwnership(int _tokenId, Bytes _to)
     {
         if (Info.Sender() == gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0)))) {
             gameItemOwner.put(_tokenId, _to);
@@ -108,17 +121,17 @@ class Pawnshop {
 
     //////////////////////////////////////////////
     /////////////////////// Minting for simulation purposes
-    public void mintGametoken(int _tokens) 
+    public void mintGametoken(int _tokens)
     {
 	    _mintGametoken(_tokens);
     }
 
-    private void _mintGametoken(int _tokens) 
+    private void _mintGametoken(int _tokens)
     {
 	    balances.put(Info.Sender(), _tokens);
     }
 
-    public void mintGameItem() 
+    public void mintGameItem()
     {
         GameItemsTotal += 1;
         userGameItem.put(Info.Sender(), GameItemsTotal);

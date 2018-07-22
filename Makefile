@@ -47,7 +47,7 @@ dry_run: token pawnshop env
 
 # ABI FOR BROWSER
 
-build_methods: dirs
+abi: dirs
 	pravda compile asm \
 		--input methods/mintGameItem.asm \
 		--output build/bin/mintGameItem.pravda
@@ -72,8 +72,12 @@ build_methods: dirs
 	pravda compile asm \
 		--input methods/initContract.asm \
 		--output build/bin/initContract.pravda
-
-
-abi: build_methods
-	base64 build/bin/getBalance.pravda > abi/getBalance.base64
-	base64 build/bin/mintTokens.pravda > abi/mintTokens.base64
+	pravda compile asm \
+		--input methods/getGameItemOwner.asm \
+		--output build/bin/getGameItemOwner.pravda
+	pravda compile asm \
+		--input methods/getGameItemUser.asm \
+		--output build/bin/getGameItemUser.pravda
+	pravda compile asm \
+		--input methods/getContractAdmin.asm \
+		--output build/bin/getContractAdmin.pravda
