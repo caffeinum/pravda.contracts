@@ -117,7 +117,7 @@ app.get('/token/initiatePawnTransaction', safe(async (wallet, { tokenId }) => {
   if (!wallet.address || !wallet.privateKey)
     throw new Error(`No wallet={address,privateKey}`)
 
-  const payload = [ tokenId ]
+  const payload = [ `int32(${tokenId})` ]
   return tx('initiatePawnTransaction', wallet, payload)
 }))
 
@@ -125,7 +125,7 @@ app.get('/token/finishPawnTransaction', safe(async (wallet, { tokenId }) => {
   if (!wallet.address || !wallet.privateKey)
     throw new Error(`No wallet={address,privateKey}`)
 
-  const payload = [ tokenId ]
+  const payload = [ `int32(${tokenId})` ]
   return tx('finishPawnTransaction', wallet, payload)
 }))
 

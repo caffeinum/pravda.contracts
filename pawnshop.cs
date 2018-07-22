@@ -40,7 +40,7 @@ class Pawnshop {
 
     public void initiatePawnTransaction(int _tokenId)
     {
-        Bytes owner = gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0)));
+        Bytes owner = gameItemOwner.getDefault(_tokenId, Bytes.EMPTY);
         if (Info.Sender() != owner) return;
 
         int willReturnMoney = maxPricePawnshopPercent * gameItemPrice.getDefault(_tokenId, 0);
@@ -90,11 +90,11 @@ class Pawnshop {
     }
 
     public Bytes getGameItemOwner(int _tokenId) {
-        return gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0)));
+        return gameItemOwner.getDefault(_tokenId, Bytes.EMPTY);
     }
 
     public Bytes getGameItemUser(int _tokenId) {
-        return gameItemUser.getDefault(_tokenId, new Bytes(Convert.ToByte(0)));
+        return gameItemUser.getDefault(_tokenId, Bytes.EMPTY);
     }
 
     //////////////////////////////////////////////
@@ -111,11 +111,11 @@ class Pawnshop {
 
     public void transferOwnership(int _tokenId, Bytes _to)
     {
-        if (Info.Sender() != gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0))))
+        if (Info.Sender() != gameItemOwner.getDefault(_tokenId, Bytes.EMPTY))
           return;
 
         if(_tokenId == 0) return;
-        if(_to == new Bytes(Convert.ToByte(0))) return;
+        if(_to == Bytes.EMPTY) return;
 
         gameItemOwner.put(_tokenId, _to);
     }
