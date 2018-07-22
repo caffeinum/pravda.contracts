@@ -39,12 +39,31 @@ class Pawnshop {
 
     public void initiatePawnTransaction(int _tokenId) 
     {
-        // int willReturnMoney ;
+        Bytes sender = Info.Sender();
+        if (sender == gameItemOwner.getDefault(_tokenId, new Bytes(Convert.ToByte(0)))) {
+        // //     ////// convert double to int???
+            int willReturnMoney = maxPricePawnshopPercent * gameItemPrice.getDefault(_tokenId, 0) / 100;
+            // int willReturnMoney = gameItemPrice.getDefault(_tokenId, 0);
+            if (willReturnMoney > 0) {
+                if (balances.getDefault(ContractAdmin, 0) >= willReturnMoney) {
+                    balances.put(ContractAdmin, balances.getDefault(ContractAdmin, 0) - willReturnMoney);
+                    balances.put(sender, balances.getDefault(sender, 0) + willReturnMoney);
+                    gameItemOwner.put(_tokenId, ContractAdmin);
+                }
+            }
+        } 
     }
 
     public void finishPawnTransaction(int _tokenId) 
     {
-
+        Bytes sender = Info.Sender();
+        int willReturnMoney = maxPricePawnshopPercent * gameItemPrice.getDefault(_tokenId, 0) / 100;
+        // int willReturnMoney = gameItemPrice.getDefault(_tokenId, 0);
+        if (balances.getDefault(sender, 0) >= willReturnMoney) {
+            balances.put(ContractAdmin, balances.getDefault(ContractAdmin, 0) + willReturnMoney);
+            balances.put(sender, balances.getDefault(sender, 0) - willReturnMoney);
+            gameItemOwner.put(_tokenId, sender);
+        }
     }
 
     public void changePawnshopPercent(int _newPercent) 
