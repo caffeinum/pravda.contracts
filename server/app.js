@@ -17,9 +17,18 @@ app.use(cors)
 
 app.get('/echo', safe((wallet) => wallet))
 
+app.get('/node', safe(async () => {
+  return {
+    address: _adminwallet.address,
+    balance: await request(`${NODE}/balance?address=${_adminwallet.address}`),
+  }
+}))
+
 app.get('/generate', safe(() => {
   return JsonOrThrow(filterJSON(genWallet()))
 }))
+
+// UNAUTHORIZED
 
 app.get('/balance', safe(async ({ address }) => {
   if (!address) throw new Error(`No wallet={address}`)
@@ -54,6 +63,17 @@ app.get('/token/faucet', safe(({ address }) => {
 
   return JsonOrThrow(filterJSON(reply2))
 }))
+
+app.get('/token/mintGameItem', safe(async ({ address }, { tokenId }) => {
+  if (!address) throw new Error(`No wallet={address}`)
+
+  const reply1 = run('mintGameItem', _adminwallet, [ tokenId ])
+  const reply2 = run('transferOwnership', _adminwallet, [ tokenId, 'x' + address ])
+
+  return JsonOrThrow(filterJSON(reply2))
+}))
+
+// AUTHORIZED
 
 app.get('/token/mintGametoken', safe(async (wallet, { amount }) => {
   if (!wallet.address || !wallet.privateKey)
