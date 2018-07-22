@@ -64,13 +64,11 @@ app.get('/token/faucet', safe(({ address }) => {
   return JsonOrThrow(filterJSON(reply2))
 }))
 
-app.get('/token/mintGameItem', safe(async ({ address }, { tokenId }) => {
-  if (!address) throw new Error(`No wallet={address}`)
+app.get('/token/mintGameItem', safe(async (wallet) => {
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
 
-  const reply1 = run('mintGameItem', _adminwallet, [ tokenId ])
-  const reply2 = run('transferOwnership', _adminwallet, [ tokenId, 'x' + address ])
-
-  return JsonOrThrow(filterJSON(reply2))
+  return tx('mintGameItem', wallet)
 }))
 
 // AUTHORIZED

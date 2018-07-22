@@ -49,12 +49,6 @@ dry_run: token pawnshop env
 
 build_methods: dirs
 	pravda compile asm \
-		--input methods/getBalance.asm \
-		--output build/bin/getBalance.pravda
-	pravda compile asm \
-		--input methods/mintTokens.asm \
-		--output build/bin/mintTokens.pravda
-	pravda compile asm \
 		--input methods/mintGameItem.asm \
 		--output build/bin/mintGameItem.pravda
 	pravda compile asm \
