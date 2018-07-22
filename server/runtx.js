@@ -10,9 +10,11 @@ const _wallet = {
   "privateKey": "a389a556b02673e60471fd5fc86161a6e01c543659194d258b6c1f12645736f722322a562195d1aca36ac4b590adb746cf34e80539a6df0ba0b5e5d93536f611"
 }
 
-const wallet_file = "tempwallet.json"
+const getWalletFile = () => `wallet-${Math.random().toString().slice(5)}.json`
 
 const run = (method = 'getBalance', wallet, payload) => {
+  const wallet_file = getWalletFile()
+
   fs.writeFileSync(wallet_file, JSON.stringify(wallet || _wallet))
 
   if (payload) {
@@ -39,7 +41,7 @@ const run = (method = 'getBalance', wallet, payload) => {
 
   const command = `pravda broadcast run \
     -e ${NODE}/broadcast -w ${wallet_file} \
-    -l 2000 -i ../build/bin/${method}.pravda`
+    -l 3000 -i ../build/bin/${method}.pravda`
 
   const reply = execSync(command)
   console.log(command + ":\n")
@@ -55,10 +57,10 @@ const genWallet = () => {
   return execSync(command).toString()
 }
 
-const pay = (address, amount = 4000) => {
+const pay = (address, amount = 10000) => {
   const command = `pravda broadcast transfer \
     -e ${NODE}/broadcast -w ../wallet.json \
-    -l 10000 -t ${address} -a ${amount}`
+    -l 5000 -t ${address} -a ${amount}`
 
   return execSync(command).toString()
 }
