@@ -43,10 +43,9 @@ const run = (method = 'getBalance', wallet, payload) => {
 
   const reply = execSync(command)
   console.log(command + ":\n")
-  console.log(reply.toString())
+  // console.log(reply.toString())
 
   fs.unlinkSync(wallet_file)
-  // , (err) => (err) ? console.error(`Couldnt delete ${err}`) : null)
 
   return reply.toString()
 }
@@ -56,10 +55,10 @@ const genWallet = () => {
   return execSync(command).toString()
 }
 
-const pay = (wallet, amount = 5000) => {
+const pay = (address, amount = 1000) => {
   const command = `pravda broadcast transfer \
     -e ${NODE}/broadcast -w ../wallet.json \
-    -l 10000 -t ${wallet.address} -a ${amount}`
+    -l 10000 -t ${address} -a ${amount}`
 
   return execSync(command).toString()
 }

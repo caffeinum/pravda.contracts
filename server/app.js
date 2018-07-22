@@ -17,6 +17,10 @@ app.use(cors)
 
 app.get('/echo', safe((wallet) => wallet))
 
+app.get('/generate', safe(() => {
+  return JsonOrThrow(filterJSON(genWallet()))
+}))
+
 app.get('/balance', safe(async ({ address }) => {
   if (!address) throw new Error(`No wallet={address}`)
 
@@ -26,14 +30,19 @@ app.get('/balance', safe(async ({ address }) => {
   }
 }))
 
-app.get('/generate', safe(() => {
-  return JsonOrThrow(filterJSON(genWallet()))
+app.get('/balanceOf', safe(async ({ address }) => {
+  if (!address) throw new Error(`No wallet={address}`)
+
+  return {
+    address,
+    balance: await request(`${NODE}/balance?address=${address}`),
+  }
 }))
 
-app.get('/faucet', safe((wallet) => {
-  if (!wallet.address) throw new Error(`No wallet={address}`)
+app.get('/faucet', safe(({ address }) => {
+  if (!address) throw new Error(`No wallet={address}`)
 
-  const reply = pay(wallet)
+  const reply = pay(address)
   return JsonOrThrow(filterJSON(reply))
 }))
 
@@ -46,46 +55,44 @@ app.get('/token/faucet', safe(({ address }) => {
   return JsonOrThrow(filterJSON(reply2))
 }))
 
-app.get('/token', safe(async () => {
-  return [
-    'getBalance',
-    'mintTokens'
-  ]
-}))
-
-app.get('/token/getBalance', safe(async (wallet, { holderAddress }) => {
-  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
-
-  const payload = holderAddress ? [ 'x'+holderAddress ] : []
-  return tx('getBalance', wallet, payload)
-}))
-
-app.get('/token/mintTokens', safe(async (wallet, { amount }) => {
-  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
+app.get('/token/mintGametoken', safe(async (wallet, { amount }) => {
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
 
   const payload = [ amount ]
   return tx('mintGametoken', wallet, payload)
 }))
 
 app.get('/token/balanceOf', safe(async (wallet, { holderAddress }) => {
-  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
 
   const payload = holderAddress ? [ 'x'+holderAddress ] : []
   return tx('balanceOf', wallet, payload)
 }))
 
 app.get('/token/gameItemOf', safe(async (wallet, { holderAddress }) => {
-  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
 
   const payload = holderAddress ? [ 'x'+holderAddress ] : []
   return tx('gameItemOf', wallet, payload)
 }))
 
 app.get('/token/transfer', safe(async (wallet, { to, amount }) => {
-  if (!wallet) throw new Error(`No wallet={address,privateKey}`)
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
 
   const payload = [ to, amount ]
-  return tx('gameItemOf', wallet, payload)
+  return tx('transfer', wallet, payload)
+}))
+
+app.get('/token/transfer-ownership', safe(async (wallet, { tokenId, to }) => {
+  if (!wallet.address || !wallet.privateKey)
+    throw new Error(`No wallet={address,privateKey}`)
+
+  const payload = [ tokenId, to ]
+  return tx('transferOwnership', wallet, payload)
 }))
 
 app.listen(process.env.PORT || 3000, () => console.log('[APP] listening on port 3000'))
