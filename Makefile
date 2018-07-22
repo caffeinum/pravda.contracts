@@ -1,4 +1,8 @@
-all: dirs token abi
+all: dirs token pawnshop build_methods
+
+# env
+env:
+	. ./setup_env
 
 # LIB
 expload: dirs
@@ -15,11 +19,11 @@ dirs:
 
 token: expload dirs
 	csc token.cs \
-			-reference:build/lib/expload.dll \
-			-out:build/win/token.exe
+		-reference:build/lib/expload.dll \
+		-out:build/win/token.exe
 	pravda compile dotnet \
-			--input build/win/token.exe \
-			--output build/win/token.pravda
+		--input build/win/token.exe \
+		--output build/bin/token.pravda
 
 pawnshop: expload dirs
 	csc pawnshop.cs \
@@ -31,20 +35,26 @@ pawnshop: expload dirs
 
 # DEPLOY TO NET
 
-deploy_all: token
-	pravda broadcast deploy -l 28000 -p 1 \
+deploy_all: token env
+	pravda broadcast deploy -l 60000 -p 1 \
 		-w wallet.json -e ${NODE}/broadcast \
 		-i build/bin/pawnshop.pravda
 
-dry_run: token
+dry_run: token env
 	pravda broadcast deploy \
 		-w wallet.json -e ${NODE}/broadcast \
 		-i build/bin/pawnshop.pravda --dry-run
 
 # ABI FOR BROWSER
 
-abi: dirs
+build_methods: dirs
 	pravda compile asm \
 		--input methods/getBalance.asm \
 		--output build/bin/getBalance.pravda
-	hexdump -e '"%x"' build/bin/getBalance.pravda > abi/getBalance.hex
+	pravda compile asm \
+		--input methods/mintTokens.asm \
+		--output build/bin/mintTokens.pravda
+
+abi: build_methods
+	base64 build/bin/getBalance.pravda > abi/getBalance.base64
+	base64 build/bin/mintTokens.pravda > abi/mintTokens.base64

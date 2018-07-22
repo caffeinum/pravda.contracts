@@ -1,4 +1,4 @@
-export NODE="https://publicnode.expload.com/api/public"
+export NODE="http://localhost:8080/api/public"
 export ADDRESS=`cat wallet.json | jq --raw-output '.address'`
 export KEY=`cat wallet.json | jq --raw-output '.privateKey'`
 
