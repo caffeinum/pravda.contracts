@@ -1,4 +1,10 @@
-# Setup env
+# [Pravda.Services](https://pravda.services) Contracts
+
+In-game pawnshop contracts for [Pravda Blockchain](https://github.com/expload/pravda). Exchange rare items to Expload tokens, items remain with you! Developed at the first Gamenode hackathon (best blockchain in-game application winner). 
+
+[<img src="https://raw.githubusercontent.com/morejust/foundation/master/madebymorejust.png" width="100">](https://morejust.foundation/?from=pravda.contracts)
+
+## Setup env
 
 ```bash
 mkdir ~/pravda
@@ -17,7 +23,7 @@ Install JRE at (Get JDK 10)[http://www.oracle.com/technetwork/java/javase/downlo
 
 Install Mono framework to use C# at [http://www.mono-project.com/download/]
 
-# Init
+## Init
 
 ```bash
 # init wallet
@@ -33,7 +39,7 @@ make
 make deploy
 ```
 
-# API
+## API
 
 ```bash
 cd server
@@ -69,3 +75,5 @@ Auth
 
   - `/token/initiatePawnTransaction?$AUTH&tokenId=$id` - get a loan for your in-game asset for around 70% of the asset price
   - `/token/initiatePawnTransaction?$AUTH&tokenId=$id` - pay back your loan when you're ready
+  
+  [<img src="https://raw.githubusercontent.com/morejust/foundation/master/madebymorejust.png" width="100">](https://morejust.foundation/?from=pravda.contracts)
